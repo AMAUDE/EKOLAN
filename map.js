@@ -117,7 +117,7 @@ const fondsCartes = {
   })
 };
 
-// Fond par défaut et suivi du fond actif
+// Fond par défaut : Google Satellite. Couches par défaut : Mairies (data01) + Limite Districts.
 let fondActif = fondsCartes['Google Satellite'];
 fondActif.addTo(map);
 
