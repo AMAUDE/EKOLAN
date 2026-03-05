@@ -118,7 +118,7 @@ const fondsCartes = {
 };
 
 // Fond par défaut et suivi du fond actif
-let fondActif = fondsCartes['Sombre (CARTO)'];
+let fondActif = fondsCartes['Google Satellite'];
 fondActif.addTo(map);
 
 // Boîte choix du fond (angle gauche)
@@ -185,10 +185,9 @@ if (typeof sp03 !== 'undefined' && sp03.features && sp03.features.length) {
       layer.bindPopup(pop);
     }
   });
-  sp03Layer.addTo(map);
   var toggleSp03 = document.getElementById('toggle-sp03');
   if (toggleSp03) {
-    toggleSp03.checked = true;
+    toggleSp03.checked = false;
     toggleSp03.addEventListener('change', function () {
       if (this.checked) {
         sp03Layer.addTo(map);
@@ -218,10 +217,9 @@ if (typeof departement !== 'undefined' && departement.features && departement.fe
       layer.bindPopup(pop);
     }
   });
-  departementLayer.addTo(map);
   var toggleDepartement = document.getElementById('toggle-departement');
   if (toggleDepartement) {
-    toggleDepartement.checked = true;
+    toggleDepartement.checked = false;
     toggleDepartement.addEventListener('change', function () {
       if (this.checked) departementLayer.addTo(map);
       else map.removeLayer(departementLayer);
@@ -247,10 +245,9 @@ if (typeof region !== 'undefined' && region.features && region.features.length) 
       layer.bindPopup(pop);
     }
   });
-  regionLayer.addTo(map);
   var toggleRegion = document.getElementById('toggle-region');
   if (toggleRegion) {
-    toggleRegion.checked = true;
+    toggleRegion.checked = false;
     toggleRegion.addEventListener('change', function () {
       if (this.checked) regionLayer.addTo(map);
       else map.removeLayer(regionLayer);
@@ -308,10 +305,9 @@ if (typeof localite01 !== 'undefined' && localite01.features && localite01.featu
       layer.bindPopup(pop);
     }
   });
-  localite01Layer.addTo(map);
   var toggleLocalite01 = document.getElementById('toggle-localite01');
   if (toggleLocalite01) {
-    toggleLocalite01.checked = true;
+    toggleLocalite01.checked = false;
     toggleLocalite01.addEventListener('change', function () {
       if (this.checked) localite01Layer.addTo(map);
       else map.removeLayer(localite01Layer);
@@ -684,11 +680,13 @@ function refreshContributionsLayer() {
   if (toggleData02 && toggleData02.checked) contributionsLayer.addTo(map);
 }
 
+var toggleData02Default = document.getElementById('toggle-data02');
+if (toggleData02Default) toggleData02Default.checked = false;
 refreshContributionsLayer();
 
-var toggleData02 = document.getElementById('toggle-data02');
+  var toggleData02 = document.getElementById('toggle-data02');
 if (toggleData02) {
-  toggleData02.checked = true;
+  toggleData02.checked = false;
   toggleData02.addEventListener('change', function () {
     if (!contributionsLayer) return;
     if (this.checked) contributionsLayer.addTo(map);
@@ -751,49 +749,80 @@ function zoomSurMairie(feature) {
   }
 }
 
+// Zoom sur une localité (polygone) — Limite Localités
+function zoomSurLocalite(feature) {
+  if (!feature || !feature.geometry) return;
+  try {
+    var tempLayer = L.geoJSON(feature);
+    var bounds = tempLayer.getBounds();
+    if (bounds.isValid()) {
+      map.fitBounds(bounds, { padding: [30, 30], maxZoom: 12 });
+      var props = feature.properties || {};
+      var nom = props.LOCALITE || props.SP || 'Localité';
+      var pop = '<strong>' + nom + '</strong>';
+      if (props.PREFECTURE) pop += '<br>Préfecture : ' + props.PREFECTURE;
+      if (props.REGION) pop += '<br>Région : ' + props.REGION;
+      if (props.DISTRICT) pop += '<br>District : ' + props.DISTRICT;
+      if (searchMarker) map.removeLayer(searchMarker);
+      searchMarker = L.marker(bounds.getCenter(), { icon: mairieIcon }).addTo(map).bindPopup(pop).openPopup();
+    }
+  } catch (e) { console.warn('zoomSurLocalite', e); }
+}
+
 function searchMairie() {
   const query = searchInput.value.trim();
   if (!query) return;
 
-  if (!data01 || !data01.features || !data01.features.length) {
-    alert('Aucune donnée mairies disponible.');
-    return;
-  }
-
   const nq = normaliser(query);
-  let matches = [];
+  let matchesMairies = [];
+  let matchesLocalites = [];
 
   // 1) Recherche par nom de mairie dans data01
-  matches = data01.features.filter(function (f) {
-    const name = (f.properties && f.properties.name) || '';
-    return normaliser(name).indexOf(nq) !== -1;
-  });
+  if (data01 && data01.features && data01.features.length) {
+    matchesMairies = data01.features.filter(function (f) {
+      const name = (f.properties && f.properties.name) || '';
+      return normaliser(name).indexOf(nq) !== -1;
+    });
+  }
 
-  // 2) Si aucun résultat : recherche par localité (liste)
-  if (matches.length === 0 && typeof listeLocalites !== 'undefined' && listeLocalites.length) {
+  // 2) Si aucun résultat mairie : recherche par localité (liste) → mairies
+  if (matchesMairies.length === 0 && typeof listeLocalites !== 'undefined' && listeLocalites.length && data01 && data01.features) {
     for (var i = 0; i < listeLocalites.length; i++) {
       var loc = listeLocalites[i];
       var nloc = normaliser(loc);
       if (nloc.indexOf(nq) !== -1 || nq.indexOf(nloc) !== -1) {
-        matches = data01.features.filter(function (f) {
+        matchesMairies = data01.features.filter(function (f) {
           var name = (f.properties && f.properties.name) || '';
           return normaliser(name).indexOf(nloc) !== -1;
         });
-        if (matches.length > 0) break;
+        if (matchesMairies.length > 0) break;
       }
     }
   }
 
-  if (matches.length === 0) {
-    alert('Aucune mairie ou localité trouvée pour « ' + query + ' ».');
+  // 3) Recherche dans la couche Limite Localités (localite01)
+  if (typeof localite01 !== 'undefined' && localite01.features && localite01.features.length) {
+    matchesLocalites = localite01.features.filter(function (f) {
+      var p = f.properties || {};
+      var localite = (p.LOCALITE || '') + ' ' + (p.SP || '') + ' ' + (p.PREFECTURE || '') + ' ' + (p.REGION || '') + ' ' + (p.DISTRICT || '');
+      return normaliser(localite).indexOf(nq) !== -1;
+    });
+  }
+
+  // Priorité : d'abord une mairie, sinon une localité
+  if (matchesMairies.length > 0) {
+    zoomSurMairie(matchesMairies[0]);
+    afficherInfosCommune(matchesMairies[0]);
+    if (matchesMairies.length > 1) console.log(matchesMairies.length + ' mairie(s) trouvée(s). Affichage du premier.');
+    return;
+  }
+  if (matchesLocalites.length > 0) {
+    zoomSurLocalite(matchesLocalites[0]);
+    if (matchesLocalites.length > 1) console.log(matchesLocalites.length + ' localité(s) trouvée(s). Affichage de la première.');
     return;
   }
 
-  zoomSurMairie(matches[0]);
-  afficherInfosCommune(matches[0]);
-  if (matches.length > 1) {
-    console.log(matches.length + ' résultat(s). Affichage du premier.');
-  }
+  alert('Aucune mairie ou localité trouvée pour « ' + query + ' ».');
 }
 
 btnSearch.addEventListener('click', searchMairie);
