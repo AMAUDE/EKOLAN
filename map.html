@@ -29,7 +29,7 @@
 
   <div class="map-page-content">
     <aside class="commune-info-box" id="commune-info-box">
-      <p class="commune-info-placeholder" id="commune-info-placeholder"></p>
+      <p class="commune-info-placeholder" id="commune-info-placeholder">Cliquez sur une mairie sur la carte pour afficher les informations et le logo de la commune.</p>
       <div class="ma-mairie-content" id="commune-info-content" hidden>
         <h2 class="ma-mairie-nom" id="commune-info-name"></h2>
         <div class="ma-mairie-logo-box">
@@ -126,9 +126,13 @@
   </div>
 
   <div class="map-ui">
-    <input type="text" id="search" placeholder="Rechercher une mairie ou un lieu..." />
-    <button type="button" id="btn-search"><span class="btn-search-label-mobile" aria-hidden="true">🔍</span><span class="btn-search-label-desktop">Rechercher</span></button>
-    <button type="button" id="btn-contribuer" title="Contribuer sur une couche">➕ Contribuer</button>
+    <div class="map-ui-search-bar">
+      <input type="text" id="search" placeholder="Rechercher une mairie ou un lieu..." aria-label="Rechercher une mairie ou un lieu" />
+    </div>
+    <div class="map-ui-buttons">
+      <button type="button" id="btn-search"><span class="btn-search-label-mobile" aria-hidden="true">🔍</span><span class="btn-search-label-desktop">Rechercher</span></button>
+      <button type="button" id="btn-contribuer" title="Contribuer sur une couche">➕ Contribuer</button>
+    </div>
   </div>
 
   <!-- Modales auth : contribuer nécessite une inscription -->

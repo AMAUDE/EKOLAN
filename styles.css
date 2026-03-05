@@ -374,6 +374,7 @@ nav {
   .map-page-content {
     flex-direction: column;
     margin-top: 52px;
+    padding-bottom: 5rem; /* espace pour la barre de recherche fixe en bas */
   }
 }
 
@@ -424,11 +425,53 @@ nav {
     width: 100%;
     max-width: none;
     min-width: 0;
-    max-height: 40vh;
-    min-height: 180px;
+    max-height: 42vh;
+    min-height: 200px;
     border-right: none;
-    border-top: 1px solid var(--border);
+    border-top: 2px solid var(--accent);
     order: 2;
+    padding: 0.75rem 1rem;
+    background: var(--bg-card);
+    display: flex;
+    flex-direction: column;
+  }
+  .commune-info-box::before {
+    content: "Informations de la commune";
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+  }
+  .commune-info-placeholder {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    font-size: 0.85rem;
+    text-align: center;
+  }
+  .ma-mairie-content {
+    gap: 0.75rem;
+  }
+  .ma-mairie-logo-box {
+    min-height: 80px;
+    aspect-ratio: 16/9;
+    flex-shrink: 0;
+  }
+  .ma-mairie-nom {
+    font-size: 1.1rem;
+  }
+  .ma-mairie-infos {
+    padding: 0.5rem 0;
+  }
+  .ma-mairie-label {
+    font-size: 0.65rem;
+  }
+  .ma-mairie-value {
+    font-size: 0.85rem;
   }
 }
 
@@ -750,18 +793,46 @@ nav {
   backdrop-filter: blur(12px);
 }
 
+/* Barre de recherche + boutons */
+.map-ui-search-bar {
+  display: block;
+}
+
+.map-ui-search-bar input {
+  width: 280px;
+}
+
+.map-ui-buttons {
+  display: flex;
+  gap: 0.75rem;
+}
+
 @media (max-width: 768px) {
   .map-ui {
-    left: max(0.75rem, env(safe-area-inset-left));
-    right: max(0.75rem, env(safe-area-inset-right));
-    bottom: max(0.75rem, env(safe-area-inset-bottom));
-    width: auto;
-    max-width: none;
+    left: 0;
+    right: 0;
+    bottom: 0;
     transform: none;
-    flex-wrap: wrap;
-    padding: 0.5rem 0.6rem;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    padding: 0.6rem max(0.75rem, env(safe-area-inset-left)) max(0.6rem, env(safe-area-inset-bottom)) max(0.75rem, env(safe-area-inset-right));
     gap: 0.5rem;
     box-sizing: border-box;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    border-top: 1px solid var(--border);
+  }
+  .map-ui-search-bar {
+    display: block;
+    width: 100%;
+    order: 1;
+  }
+  .map-ui-buttons {
+    display: flex;
+    gap: 0.5rem;
+    order: 2;
   }
 }
 
@@ -777,26 +848,22 @@ nav {
 }
 
 @media (max-width: 768px) {
+  .map-ui-search-bar input,
   .map-ui input {
     width: 100%;
     min-width: 0;
-    flex: 1 1 100%;
-    font-size: 16px; /* évite le zoom sur iOS */
-    order: 1;
+    box-sizing: border-box;
+    font-size: 16px;
+    min-height: 44px;
+    padding: 0.6rem 0.75rem;
+    border-radius: 8px;
   }
-  .map-ui button {
+  .map-ui-buttons button {
     flex: 1 1 0;
     min-width: 0;
-    padding: 0.5rem 0.6rem;
+    padding: 0.55rem 0.6rem;
     font-size: 0.85rem;
     white-space: nowrap;
-    order: 2;
-  }
-  .map-ui button:first-of-type {
-    flex: 1 1 0;
-  }
-  .map-ui button:last-of-type {
-    flex: 1 1 0;
   }
 }
 
