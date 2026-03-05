@@ -2,6 +2,22 @@
 
 Plateforme cartographique avec page d'accueil à fond animé et carte interactive.
 
+## Voir le projet en ligne (GitHub Pages)
+
+Pour afficher le site via un lien public :
+
+1. Sur GitHub, ouvrez le dépôt **https://github.com/AMAUDE/EKOLAN**
+2. Allez dans **Settings** (Paramètres) du dépôt
+3. Dans le menu de gauche, cliquez sur **Pages** (sous "Code and automation")
+4. Dans **Build and deployment** → **Source** : choisissez **Deploy from a branch**
+5. **Branch** : `main` — **Folder** : `/ (root)` — puis **Save**
+6. Après 1 à 2 minutes, le site sera accessible à l’adresse :  
+   **https://amaude.github.io/EKOLAN/**
+
+*(GitHub utilise le nom d’utilisateur en minuscules dans l’URL.)*
+
+Sur cette version en ligne, la page d’accueil et la carte s’affichent ; l’inscription et la connexion (API) ne fonctionnent pas car GitHub Pages ne fait que servir des fichiers statiques.
+
 ## Contenu
 
 - **Page d'accueil** (`index.html`) : fond animé (orbes en dégradé, grille, bruit), titre et bouton vers la carte.
