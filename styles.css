@@ -638,15 +638,20 @@ nav {
     height: 20px;
   }
   .map-fond-box {
-    left: 0.5rem;
-    right: auto;
+    top: auto;
+    bottom: max(4.5rem, calc(env(safe-area-inset-bottom) + 4rem));
+    left: max(0.5rem, env(safe-area-inset-left));
+    right: max(0.5rem, env(safe-area-inset-right));
     min-width: 0;
-    width: calc(100% - 4rem);
-    max-width: 280px;
+    width: auto;
+    max-width: none;
+    max-height: 38vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
   .map-container:has(.map-toolbar-vertical) .map-fond-box:not(.map-fond-box--hidden) {
-    right: auto;
-    left: 0.5rem;
+    right: max(0.5rem, env(safe-area-inset-right));
+    left: max(0.5rem, env(safe-area-inset-left));
   }
   .polygon-toolbar {
     bottom: 1rem;
@@ -674,7 +679,27 @@ nav {
     flex: 1 1 100%;
   }
   .ma-mairie-logo-box {
-    min-height: 100px;
+    min-height: 80px;
+    aspect-ratio: 16/9;
+  }
+  .ma-mairie-nom {
+    font-size: 1.1rem;
+  }
+  .commune-info-box {
+    padding: 0.75rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .map-fond-box {
+    max-height: 32vh;
+    bottom: max(3.75rem, calc(env(safe-area-inset-bottom) + 3.5rem));
+  }
+  .map-ui {
+    padding: 0.4rem 0.5rem;
+  }
+  .map-ui button {
+    font-size: 0.8rem;
   }
 }
 
@@ -727,12 +752,16 @@ nav {
 
 @media (max-width: 768px) {
   .map-ui {
-    left: 50%;
-    bottom: max(1rem, env(safe-area-inset-bottom));
-    width: calc(100% - 2rem);
-    max-width: 420px;
+    left: max(0.75rem, env(safe-area-inset-left));
+    right: max(0.75rem, env(safe-area-inset-right));
+    bottom: max(0.75rem, env(safe-area-inset-bottom));
+    width: auto;
+    max-width: none;
+    transform: none;
     flex-wrap: wrap;
-    padding: 0.6rem 0.75rem;
+    padding: 0.5rem 0.6rem;
+    gap: 0.5rem;
+    box-sizing: border-box;
   }
 }
 
@@ -753,10 +782,21 @@ nav {
     min-width: 0;
     flex: 1 1 100%;
     font-size: 16px; /* évite le zoom sur iOS */
+    order: 1;
   }
   .map-ui button {
-    flex: 1 1 auto;
-    min-width: 80px;
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 0.5rem 0.6rem;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    order: 2;
+  }
+  .map-ui button:first-of-type {
+    flex: 1 1 0;
+  }
+  .map-ui button:last-of-type {
+    flex: 1 1 0;
   }
 }
 
@@ -783,6 +823,20 @@ nav {
 
 .map-ui button:hover {
   opacity: 0.9;
+}
+
+/* Libellés bouton recherche : court sur mobile pour éviter débordement */
+.btn-search-label-mobile {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .btn-search-label-mobile {
+    display: inline;
+  }
+  .btn-search-label-desktop {
+    display: none;
+  }
 }
 
 /* Leaflet overrides */
