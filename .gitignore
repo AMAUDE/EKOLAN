@@ -1,0 +1,19 @@
+# Dépendances
+node_modules/
+
+# Fichiers de données volumineux (> 100 Mo GitHub)
+commune.js
+
+# Fichiers d'environnement (ne pas versionner les secrets)
+.env
+.env.local
+.env.*.local
+
+# Logs et cache
+*.log
+npm-debug.log*
+.npm
+
+# OS
+.DS_Store
+Thumbs.db

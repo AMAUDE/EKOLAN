@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CartoPlateforme — Exploration géographique</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="bg-animation">
+    <video class="bg-video" autoplay muted loop playsinline>
+      <source src="anime01.mp4" type="video/mp4" />
+      <source src="anime01.webm" type="video/webm" />
+    </video>
+    <div class="bg-video-overlay"></div>
+    <div class="grid-overlay"></div>
+    <div class="noise-overlay"></div>
+  </div>
+
+  <header class="header">
+    <a href="index.html" class="logo">CartoPlateforme</a>
+    <nav>
+      <a href="index.html" class="nav-link active">Accueil</a>
+      <a href="map.html" class="nav-link">Carte</a>
+    </nav>
+  </header>
+
+  <main class="hero">
+    <h1 class="hero-title">
+      <span class="line">AMAUDE</span>
+    </h1>
+    <h2 class="hero-title">
+      <span class="line accent">MAIRIE</span>
+    </h2>
+    <p class="hero-desc">
+      Explorer les Mairies de la Côte d'ivoire en un clic 
+    </p>
+    <p class="hero-desc">
+      Plateforme cartographique interactive pour visualiser, analyser et découvrir
+      les territoires avec précision.
+    </p>
+    <a href="map.html" class="cta">
+      <span>Ouvrir la carte</span>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </a>
+  </main>
+
+  <footer class="footer">
+    <span>Amaude_Mairie© 2025</span>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

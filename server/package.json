@@ -1,0 +1,18 @@
+{
+  "name": "cartoplatforme-auth",
+  "version": "1.0.0",
+  "description": "API inscription, connexion et confirmation email pour CartoPlateforme",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "nodemailer": "^6.9.7",
+    "uuid": "^9.0.1"
+  }
+}

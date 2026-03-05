@@ -1,0 +1,11 @@
+[
+  {
+    "id": "67525da9-f4d2-4f75-8876-7c0b9d864332",
+    "nom_utilisateur": "Amaude",
+    "mail": "nagonejoseph8@gmail.com",
+    "passwordHash": "$2a$10$IAsCqtaMLXdBZ375KhMfkuJ7IcRQWzyVkNg7o8vU182sLNJpth9s.",
+    "confirmed": false,
+    "confirmationToken": "14d1fdf7-0d68-41d2-bd86-9ad2bac710c1",
+    "createdAt": "2026-03-05T07:48:08.360Z"
+  }
+]

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Confirmation — CartoPlateforme</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&display=swap" rel="stylesheet" />
+  <style>
+    .confirm-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem; }
+    .confirm-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; max-width: 420px; text-align: center; }
+    .confirm-box h1 { font-size: 1.5rem; margin-bottom: 1rem; }
+    .confirm-box p { color: var(--text-muted); margin-bottom: 1.5rem; }
+    .confirm-box a { color: var(--accent); font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="confirm-page">
+    <div class="confirm-box" id="confirm-box">
+      <h1 id="confirm-title">Vérification...</h1>
+      <p id="confirm-message">Veuillez patienter.</p>
+      <a href="map.html" id="confirm-link" style="display: none;">Retour à la carte</a>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var token = params.get('token');
+      var success = params.get('success');
+      var error = params.get('error');
+      var title = document.getElementById('confirm-title');
+      var message = document.getElementById('confirm-message');
+      var link = document.getElementById('confirm-link');
+
+      if (success === '1') {
+        title.textContent = 'Compte activé';
+        message.textContent = 'Votre inscription est confirmée. Vous pouvez maintenant vous connecter et contribuer sur la carte.';
+        link.href = 'map.html';
+        link.style.display = 'inline-block';
+        return;
+      }
+      if (error === 'missing' || error === 'invalid') {
+        title.textContent = 'Lien invalide ou expiré';
+        message.textContent = 'Le lien de confirmation est invalide ou a déjà été utilisé. Vous pouvez vous connecter si votre compte est déjà activé, ou vous réinscrire.';
+        link.href = 'map.html';
+        link.style.display = 'inline-block';
+        return;
+      }
+      if (token) {
+        window.location.href = '/api/confirm?token=' + encodeURIComponent(token);
+        return;
+      }
+      title.textContent = 'Lien invalide';
+      message.textContent = 'Aucun lien de confirmation fourni.';
+      link.href = 'map.html';
+      link.style.display = 'inline-block';
+    })();
+  </script>
+</body>
+</html>

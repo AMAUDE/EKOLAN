@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Carte — CartoPlateforme</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&display=swap" rel="stylesheet" />
+</head>
+<body class="page-map">
+  <header class="header">
+    <a href="index.html" class="logo"> CartoPlateforme_Amaude/Mairie </a>
+    <nav class="header-nav">
+      <a href="index.html" class="nav-link">Accueil</a>
+      <a href="map.html" class="nav-link active">Carte</a>
+      <span class="auth-buttons" id="auth-buttons">
+        <a href="#" class="btn-header btn-login" id="btn-se-connecter">Se connecter</a>
+        <a href="#" class="btn-header btn-signup" id="btn-s-inscrire">S'inscrire</a>
+      </span>
+      <span class="auth-user" id="auth-user" hidden>
+        <span class="auth-user-name" id="auth-user-name"></span>
+        <a href="#" class="btn-header btn-login" id="btn-deconnexion">Déconnexion</a>
+      </span>
+    </nav>
+  </header>
+
+  <div class="map-page-content">
+    <aside class="commune-info-box" id="commune-info-box">
+      <p class="commune-info-placeholder" id="commune-info-placeholder"></p>
+      <div class="ma-mairie-content" id="commune-info-content" hidden>
+        <h2 class="ma-mairie-nom" id="commune-info-name"></h2>
+        <div class="ma-mairie-logo-box">
+          <video class="ma-mairie-logo-video" autoplay muted loop playsinline>
+            <source src="anime02.mp4" type="video/mp4" />
+            <source src="anime02.webm" type="video/webm" />
+          </video>
+          <div class="ma-mairie-logo-overlay"></div>
+          <div class="ma-mairie-logo-wrap">
+            <img id="commune-info-logo" class="ma-mairie-logo" src="logo01.png" alt="Logo de la mairie" />
+            <span class="ma-mairie-logo-placeholder" id="commune-info-logo-placeholder" hidden>Logo</span>
+          </div>
+        </div>
+        <div class="ma-mairie-infos">
+          <div class="ma-mairie-row"><span class="ma-mairie-label">Commune</span><span id="commune-info-commune" class="ma-mairie-value"></span></div>
+          <div class="ma-mairie-row"><span class="ma-mairie-label">Maire</span><span id="commune-info-maire" class="ma-mairie-value"></span></div>
+          <div class="ma-mairie-row"><span class="ma-mairie-label">Population</span><span id="commune-info-population" class="ma-mairie-value"></span></div>
+          <div class="ma-mairie-row"><span class="ma-mairie-label">Quartier</span><span id="commune-info-quartier" class="ma-mairie-value"></span></div>
+          <div class="ma-mairie-row"><span class="ma-mairie-label">Superficie</span><span id="commune-info-superficie" class="ma-mairie-value"></span></div>
+          <div class="ma-mairie-row"><span class="ma-mairie-label">Langues parlées</span><span id="commune-info-langues" class="ma-mairie-value"></span></div>
+        </div>
+      </div>
+    </aside>
+    <div class="map-container">
+      <div id="map"></div>
+      <!-- Barre d'outils verticale style OpenStreetMap -->
+      <div class="map-toolbar-vertical" id="map-toolbar-vertical" role="toolbar" aria-label="Outils carte">
+        <button type="button" class="map-toolbar-btn" id="toolbar-langue" title="Langue / Couches" aria-label="Langue et couches">
+          <svg class="map-toolbar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        </button>
+        <button type="button" class="map-toolbar-btn" id="toolbar-zoom-in" title="Zoom avant" aria-label="Zoom avant">+</button>
+        <button type="button" class="map-toolbar-btn" id="toolbar-zoom-out" title="Zoom arrière" aria-label="Zoom arrière">−</button>
+        <button type="button" class="map-toolbar-btn" id="toolbar-locate" title="Ma position" aria-label="Me localiser">
+          <svg class="map-toolbar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83M12 8a4 4 0 1 1 0 8 4 4 0 0 1 0-8z"/></svg>
+        </button>
+        <button type="button" class="map-toolbar-btn" id="toolbar-layers" title="Couches" aria-label="Afficher les couches">
+          <svg class="map-toolbar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+        </button>
+        <button type="button" class="map-toolbar-btn" id="toolbar-info" title="À propos et copyright" aria-label="Informations">
+          <svg class="map-toolbar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        </button>
+        <button type="button" class="map-toolbar-btn" id="toolbar-share" title="Partager" aria-label="Partager la carte">
+          <svg class="map-toolbar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8M16 6l-4-4-4 4M12 2v13"/></svg>
+        </button>
+        <button type="button" class="map-toolbar-btn" id="toolbar-feedback" title="Commentaires / Signaler" aria-label="Commentaires">
+          <svg class="map-toolbar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </button>
+        <button type="button" class="map-toolbar-btn" id="toolbar-help" title="Aide" aria-label="Aide">
+          <svg class="map-toolbar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
+        </button>
+      </div>
+      <div class="map-fond-box" id="map-fond-box">
+        <span class="map-fond-box-title">Fond de carte</span>
+        <select id="select-fond" aria-label="Choisir le fond de carte">
+          <option value="Sombre (CARTO)">Sombre (CARTO)</option>
+          <option value="Clair (CARTO Voyager)">Clair (CARTO Voyager)</option>
+          <option value="OpenStreetMap">OpenStreetMap</option>
+          <option value="Topographie (OpenTopoMap)">Topographie (OpenTopoMap)</option>
+          <option value="Satellite (ESRI)">Satellite (ESRI)</option>
+          <option value="Terrain (ESRI)">Terrain (ESRI)</option>
+          <option value="Google Satellite">Google Satellite</option>
+          <option value="Google Satellite Hybride">Google Satellite Hybride</option>
+        </select>
+        <label class="map-layer-toggle">
+          <input type="checkbox" id="toggle-sp03" />
+          <span>Limite Sous-préfectures</span>
+        </label>
+        <label class="map-layer-toggle">
+          <input type="checkbox" id="toggle-departement" />
+          <span>Limite Départements / Préfectures</span>
+        </label>
+        <label class="map-layer-toggle">
+          <input type="checkbox" id="toggle-region" />
+          <span>Limite Régions</span>
+        </label>
+        <label class="map-layer-toggle">
+          <input type="checkbox" id="toggle-district" />
+          <span>Limite Districts</span>
+        </label>
+        <label class="map-layer-toggle">
+          <input type="checkbox" id="toggle-localite01" />
+          <span>Limite Localités</span>
+        </label>
+        <label class="map-layer-toggle">
+          <input type="checkbox" id="toggle-data01" />
+          <span>Mairies (data01)</span>
+        </label>
+        <label class="map-layer-toggle">
+          <input type="checkbox" id="toggle-data02" />
+          <span>Mairies (contributions data02)</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="map-ui">
+    <input type="text" id="search" placeholder="Rechercher une mairie ou un lieu..." />
+    <button type="button" id="btn-search">Rechercher</button>
+    <button type="button" id="btn-contribuer" title="Contribuer sur une couche">➕ Contribuer</button>
+  </div>
+
+  <!-- Modales auth : contribuer nécessite une inscription -->
+  <div id="modal-contribuer-auth-required" class="modal-contribution" hidden>
+    <div class="modal-contribution-content">
+      <h3>Contribuer</h3>
+      <p class="modal-contribution-hint">Pour contribuer sur la carte (mairies ou localités), vous devez être inscrit et connecté. Inscrivez-vous puis confirmez votre adresse email.</p>
+      <div class="modal-contribution-actions">
+        <button type="button" class="btn-header btn-login" id="btn-open-login-from-contrib">Se connecter</button>
+        <button type="button" class="btn-header btn-signup" id="btn-open-register-from-contrib">S'inscrire</button>
+      </div>
+    </div>
+  </div>
+  <div id="modal-login" class="modal-contribution" hidden>
+    <div class="modal-contribution-content">
+      <h3>Se connecter</h3>
+      <form id="form-login">
+        <label for="login-mail">Email</label>
+        <input type="email" id="login-mail" name="mail" required placeholder="votre@email.com" />
+        <label for="login-password">Mot de passe</label>
+        <input type="password" id="login-password" name="mot_de_passe" required placeholder="Mot de passe" />
+        <p class="auth-error" id="login-error" hidden></p>
+        <div class="modal-contribution-actions">
+          <button type="button" id="btn-close-login">Annuler</button>
+          <button type="submit">Connexion</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div id="modal-register" class="modal-contribution" hidden>
+    <div class="modal-contribution-content">
+      <h3>S'inscrire</h3>
+      <p class="modal-contribution-hint">Après inscription, un email de confirmation vous sera envoyé. Vous devrez cliquer sur le lien pour activer votre compte et pouvoir contribuer.</p>
+      <form id="form-register">
+        <label for="register-nom">Nom d'utilisateur <span class="required">*</span></label>
+        <input type="text" id="register-nom" name="nom_utilisateur" required placeholder="Ex. JeanDupont" minlength="2" />
+        <label for="register-mail">Email <span class="required">*</span></label>
+        <input type="email" id="register-mail" name="mail" required placeholder="votre@email.com" />
+        <label for="register-password">Mot de passe <span class="required">*</span></label>
+        <input type="password" id="register-password" name="mot_de_passe" required placeholder="Au moins 6 caractères" minlength="6" />
+        <p class="auth-error" id="register-error" hidden></p>
+        <div class="modal-contribution-actions">
+          <button type="button" id="btn-close-register">Annuler</button>
+          <button type="submit">S'inscrire</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="modal-choix-contribution" class="modal-contribution" hidden>
+    <div class="modal-contribution-content modal-choix-contribution">
+      <h3>Choisir la couche de contribution</h3>
+      <p class="modal-contribution-hint">Sur quelle couche voulez-vous apporter votre contribution ?</p>
+      <div class="modal-choix-buttons">
+        <button type="button" id="btn-choix-mairie" class="btn-choix-couche">
+          <span class="btn-choix-icon">📍</span>
+          <span class="btn-choix-label">Mairie</span>
+          <span class="btn-choix-desc">Point (clic sur la carte)</span>
+        </button>
+        <button type="button" id="btn-choix-localite" class="btn-choix-couche">
+          <span class="btn-choix-icon">📐</span>
+          <span class="btn-choix-label">Localité</span>
+          <span class="btn-choix-desc">Polygone (numérisation)</span>
+        </button>
+      </div>
+      <div class="modal-contribution-actions">
+        <button type="button" id="btn-annuler-choix">Annuler</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="polygon-toolbar" class="polygon-toolbar" hidden>
+    <span class="polygon-toolbar-hint">Cliquez sur la carte pour ajouter les sommets du polygone.</span>
+    <button type="button" id="btn-terminer-polygone">Terminer le polygone</button>
+    <button type="button" id="btn-annuler-polygone">Annuler</button>
+  </div>
+
+  <div id="modal-contribution-localite" class="modal-contribution" hidden>
+    <div class="modal-contribution-content">
+      <h3>Nouvelle localité</h3>
+      <p class="modal-contribution-hint">Renseignez les informations de la localité (polygone déjà dessiné).</p>
+      <form id="form-contribution-localite">
+        <label for="contrib-loc-nom">Nom de la localité <span class="required">*</span></label>
+        <input type="text" id="contrib-loc-nom" name="localite" required placeholder="ex. TOUMODI, DJEKANOU" />
+        <label for="contrib-loc-sp">Sous-préfecture (SP)</label>
+        <input type="text" id="contrib-loc-sp" name="sp" placeholder="ex. TOUMODI" />
+        <label for="contrib-loc-prefecture">Préfecture</label>
+        <input type="text" id="contrib-loc-prefecture" name="prefecture" placeholder="ex. TOUMODI" />
+        <label for="contrib-loc-region">Région</label>
+        <input type="text" id="contrib-loc-region" name="region" placeholder="ex. MORONOU" />
+        <label for="contrib-loc-district">District</label>
+        <input type="text" id="contrib-loc-district" name="district" placeholder="ex. LACS" />
+        <label for="contrib-loc-remarque">Remarque</label>
+        <textarea id="contrib-loc-remarque" name="remarque" rows="2" placeholder="Information complémentaire..."></textarea>
+        <div class="modal-contribution-actions">
+          <button type="button" id="btn-annuler-contrib-localite">Annuler</button>
+          <button type="submit">Enregistrer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modales barre d'outils (style OSM) -->
+  <div id="modal-toolbar-langue" class="modal-contribution modal-toolbar" hidden>
+    <div class="modal-contribution-content">
+      <h3>Langue</h3>
+      <p class="modal-contribution-hint">Choisir la langue de l'interface.</p>
+      <div class="modal-toolbar-actions">
+        <button type="button" class="btn-langue active" data-lang="fr">Français</button>
+        <button type="button" class="btn-langue" data-lang="en">English</button>
+      </div>
+      <button type="button" class="modal-close-toolbar" id="close-modal-langue">Fermer</button>
+    </div>
+  </div>
+  <div id="modal-toolbar-info" class="modal-contribution modal-toolbar" hidden>
+    <div class="modal-contribution-content">
+      <h3>À propos et copyright</h3>
+      <p class="modal-contribution-hint">CartoPlateforme — Carte des mairies et limites administratives (Côte d'Ivoire). Données sous licence ouverte. Fonds de carte : OpenStreetMap, CARTO, Esri, OpenTopoMap, Google.</p>
+      <p class="modal-contribution-hint"><a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap © contributeurs</a>. Utilisation soumise aux conditions des fournisseurs de fonds de carte.</p>
+      <button type="button" class="modal-close-toolbar" id="close-modal-info">Fermer</button>
+    </div>
+  </div>
+  <div id="modal-toolbar-share" class="modal-contribution modal-toolbar" hidden>
+    <div class="modal-contribution-content">
+      <h3>Partager</h3>
+      <p class="modal-contribution-hint">Lien de la vue actuelle :</p>
+      <div class="share-link-box">
+        <input type="text" id="share-link-input" readonly />
+        <button type="button" id="copy-share-link">Copier</button>
+      </div>
+      <button type="button" class="modal-close-toolbar" id="close-modal-share">Fermer</button>
+    </div>
+  </div>
+  <div id="modal-toolbar-feedback" class="modal-contribution modal-toolbar" hidden>
+    <div class="modal-contribution-content">
+      <h3>Commentaires / Signaler</h3>
+      <p class="modal-contribution-hint">Un problème ou une suggestion ? Envoyez-nous un message.</p>
+      <form id="form-feedback" class="form-feedback">
+        <label for="feedback-email">Votre email</label>
+        <input type="email" id="feedback-email" placeholder="email@exemple.com" />
+        <label for="feedback-message">Message</label>
+        <textarea id="feedback-message" rows="4" placeholder="Décrivez votre remarque..."></textarea>
+        <div class="modal-contribution-actions">
+          <button type="button" class="modal-close-toolbar" id="close-modal-feedback">Annuler</button>
+          <button type="submit">Envoyer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div id="modal-toolbar-help" class="modal-contribution modal-toolbar" hidden>
+    <div class="modal-contribution-content">
+      <h3>Aide</h3>
+      <p class="modal-contribution-hint"><strong>Recherche :</strong> saisissez un lieu ou une mairie puis cliquez sur Rechercher.</p>
+      <p class="modal-contribution-hint"><strong>Contribuer :</strong> ajoutez un point (mairie) ou dessinez un polygone (localité) puis renseignez le formulaire.</p>
+      <p class="modal-contribution-hint"><strong>Couches :</strong> utilisez le bouton Couches ou le panneau en haut à droite pour changer le fond de carte et afficher/masquer les limites (sous-préfectures, départements, régions, districts, localités).</p>
+      <p class="modal-contribution-hint"><strong>Ma position :</strong> centre la carte sur votre position GPS (si autorisée).</p>
+      <button type="button" class="modal-close-toolbar" id="close-modal-help">Fermer</button>
+    </div>
+  </div>
+
+  <div id="modal-contribution" class="modal-contribution" hidden>
+    <div class="modal-contribution-content">
+      <h3>Ajouter une mairie</h3>
+      <p class="modal-contribution-hint">Renseignez les informations de la mairie (point déjà placé sur la carte).</p>
+      <form id="form-contribution">
+        <label for="contrib-nom">Nom de la mairie <span class="required">*</span></label>
+        <input type="text" id="contrib-nom" name="nom" required placeholder="ex. MAIRIE DE ..." />
+        <label for="contrib-localite">Localité</label>
+        <input type="text" id="contrib-localite" name="localite" placeholder="ex. Abidjan, Yamoussoukro" />
+        <label for="contrib-remarque">Remarque</label>
+        <textarea id="contrib-remarque" name="remarque" rows="2" placeholder="Information complémentaire..."></textarea>
+        <input type="hidden" id="contrib-lat" name="lat" />
+        <input type="hidden" id="contrib-lon" name="lon" />
+        <div class="modal-contribution-actions">
+          <button type="button" id="btn-annuler-contrib">Annuler</button>
+          <button type="submit">Enregistrer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="data01.js"></script>
+  <script src="data02.js"></script>
+  <script src="commune.js"></script>
+  <script src="limite administrative/sp03.js"></script>
+  <script src="limite administrative/departement.js"></script>
+  <script src="limite administrative/region.js"></script>
+  <script src="limite administrative/district.js"></script>
+  <script src="limite administrative/localite01.js"></script>
+  <script src="liste.js"></script>
+  <script src="map.js"></script>
+</body>
+</html>
